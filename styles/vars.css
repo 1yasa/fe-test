@@ -1,0 +1,6 @@
+:root {
+	--sidebar-width: 72px;
+	--tabs-width: calc(100% - var(--sidebar-width));
+	--tab-height: 36px;
+	--content-height: calc(100% - var(--tab-height));
+}

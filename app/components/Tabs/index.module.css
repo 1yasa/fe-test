@@ -1,0 +1,12 @@
+._local {
+	width: var(--tabs-width);
+	overflow-x: auto;
+}
+
+.tab {
+	height: var(--tab-height);
+}
+
+.content {
+	height: var(--content-height);
+}

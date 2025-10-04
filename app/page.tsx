@@ -1,4 +1,40 @@
+'use client'
+
+import { useMemo } from 'react'
+
+import { Sidebar, Tabs } from './components'
+import { useModel } from './hooks'
+
+import type { IPropsSidebar, IPropsTabs } from './types'
+
 const Index = () => {
-	return <div>Home Page</div>
+	const { tabs, width, toggleTabActive } = useModel()
+
+	const props_sidebar: IPropsSidebar = {
+		tabs,
+		toggleTabActive
+	}
+
+	const props_tabs: IPropsTabs = {
+		tabs: useMemo(
+			() =>
+				tabs.reduce((total, item) => {
+					if (item.active) total.push(item.id)
+
+					return total
+				}, []),
+			[tabs]
+		),
+		width,
+		toggleTabActive
+	}
+
+	return (
+		<div className='w-screen h-screen flex'>
+			<Sidebar {...props_sidebar} />
+			<Tabs {...props_tabs} />
+		</div>
+	)
 }
+
 export default Index

@@ -1,0 +1,14 @@
+@import 'tailwindcss';
+@import './vars.css';
+
+* {
+	box-sizing: border-box;
+}
+
+body {
+	line-height: inherit;
+	padding: 0;
+	margin: 0;
+
+	-webkit-font-smoothing: antialiased;
+}

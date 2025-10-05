@@ -19,12 +19,12 @@ const Index = (props: IPropsSidebar) => {
 	return (
 		<div className={cx('flex flex-col gap-6 py-6 border-r-2 border-gray-100', styles._local)}>
 			{tabs.map(({ id, active }) => {
-				const Icon = icons_map[id]
+				const Icon = icons_map[id as keyof typeof icons_map]
 
 				return (
 					<div
 						className={cx(
-							'flex flex-col items-center gap-1 cursor-pointer hover:text-black hover:scale-105 active:scale-95 transition-[scale,color] duration-150 ease-in-out select-none',
+							'flex flex-col items-center gap-1 cursor-pointer hover:scale-105 active:scale-95 transition-[scale,color] duration-150 ease-in-out select-none',
 							!active && 'text-gray-400'
 						)}
 						onClick={() => toggleTabActive(id)}

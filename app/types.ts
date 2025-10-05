@@ -1,3 +1,5 @@
+import type { DragEndEvent } from '@dnd-kit/core'
+
 export interface Tab {
 	id: string
 	active: boolean
@@ -13,4 +15,10 @@ export interface IPropsSidebar {
 export interface IPropsTabs extends Pick<IPropsSidebar, 'toggleTabActive'> {
 	tabs: Array<Tab['id']>
 	width: number | string
+	onDragEnd: (args: DragEndEvent) => void
+}
+
+export interface IPropsTabsItem extends Pick<IPropsTabs, 'width' | 'toggleTabActive'> {
+	id: string
+	overlay?: boolean
 }

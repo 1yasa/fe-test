@@ -5,6 +5,10 @@
 
 .tab {
 	height: var(--tab-height);
+
+	&.isDragging {
+		width: calc(100% + 2px);
+	}
 }
 
 .content {

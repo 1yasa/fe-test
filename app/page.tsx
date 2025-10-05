@@ -8,7 +8,7 @@ import { useModel } from './hooks'
 import type { IPropsSidebar, IPropsTabs } from './types'
 
 const Index = () => {
-	const { tabs, width, toggleTabActive } = useModel()
+	const { tabs, width, toggleTabActive, onDragEnd } = useModel()
 
 	const props_sidebar: IPropsSidebar = {
 		tabs,
@@ -26,7 +26,8 @@ const Index = () => {
 			[tabs]
 		),
 		width,
-		toggleTabActive
+		toggleTabActive,
+		onDragEnd
 	}
 
 	return (

@@ -1,41 +1,62 @@
+import { useState } from 'react'
+import { useMemoizedFn } from 'ahooks'
 import cx from 'classix'
+import { createPortal } from 'react-dom'
 
+import { useMounted } from '@/app/hooks'
 import { memo } from '@/utils'
-import { XMarkIcon } from '@heroicons/react/24/outline'
+import { DndContext, DragOverlay, MeasuringStrategy, PointerSensor, useSensor, useSensors } from '@dnd-kit/core'
+import { horizontalListSortingStrategy, SortableContext } from '@dnd-kit/sortable'
 
-import Lazy from '../Lazy'
+import Item from './Item'
 
 import styles from './index.module.css'
 
 import type { IPropsTabs } from '@/app/types'
+import type { DragEndEvent, DragStartEvent } from '@dnd-kit/core'
+import type { AnimateLayoutChanges } from '@dnd-kit/sortable'
 
 const Index = (props: IPropsTabs) => {
-	const { tabs, width, toggleTabActive } = props
+	const { tabs, width, toggleTabActive, onDragEnd: handleDragEnd } = props
+	const [active, setActive] = useState<string | null>(null)
+	const mounted = useMounted()
+
+	const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 6 } }))
+
+	const onDragStart = useMemoizedFn(({ active }: DragStartEvent) => {
+		setActive(active.id as string)
+	})
+
+	const onDragEnd = useMemoizedFn((args: DragEndEvent) => {
+		handleDragEnd(args)
+		setActive(null)
+	})
 
 	return (
 		<div className={cx('flex', styles._local)}>
 			<div className='flex' style={{ width: width === 300 ? 'max-content' : '100%' }}>
-				{tabs.map(id => (
-					<div className='flex flex-col border-r-2 border-gray-100' style={{ width }} key={id}>
-						<div
-							className={cx(
-								'relative flex cursor-pointer items-center justify-center bg-gray-50',
-								styles.tab
-							)}
-						>
-							<span className='text-xs hover:text-gray-900'>{id}</span>
-							<div
-								className='btn_close absolute right-2 flex h-4 w-4 cursor-pointer select-none items-center justify-center text-gray-400 hover:scale-105 hover:text-gray-900 active:scale-95 transition-[scale,color] duration-150 ease-in-out'
-								onClick={() => toggleTabActive(id, false)}
-							>
-								<XMarkIcon />
-							</div>
-						</div>
-						<div className={cx('flex items-center justify-center', styles.content)}>
-							<Lazy name={id} />
-						</div>
-					</div>
-				))}
+				<DndContext
+					sensors={sensors}
+					measuring={{ droppable: { strategy: MeasuringStrategy.Always } }}
+					onDragStart={onDragStart}
+					onDragEnd={onDragEnd}
+				>
+					<SortableContext items={tabs} strategy={horizontalListSortingStrategy}>
+						{tabs.map(id => (
+							<Item {...{ id, width, toggleTabActive }} key={id} />
+						))}
+					</SortableContext>
+					{mounted
+						? createPortal(
+								<DragOverlay adjustScale>
+									{active && (
+										<Item id={active} overlay {...{ width, toggleTabActive }} />
+									)}
+								</DragOverlay>,
+								document.body
+							)
+						: null}
+				</DndContext>
 			</div>
 		</div>
 	)

@@ -22,7 +22,7 @@ const Index = () => {
 					if (item.active) total.push(item.id)
 
 					return total
-				}, []),
+				}, [] as Array<string>),
 			[tabs]
 		),
 		width,
